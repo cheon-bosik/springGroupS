@@ -1,5 +1,7 @@
 package com.spring.springGroupS.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,15 +108,35 @@ public class MemberController {
 			}
 			
 			// 3. 기타처리(DB에 처리해야할것들(방문카운트, 포인트,... 등)
-			// 3-1. 기타처리 : 오늘 첫방문이면 todayCnt = 0
+			// 3-1. 기타처리 : 준회원을 정회원 등업처리.. 
+			//	(1) 준회원의 정회원 등업조건 : 방명록에 3회이상 글쓰기, 회원로그인 4일 이상
+			if(vo.getLevel() == 3 && vo.getVisitCnt() > 3) {
+				int guestCnt = guestService.getMemberSearch(mid, vo.getNickName(), vo.getName());
+				if(guestCnt >= 3) memberService.setMemberLevelUp(mid);
+			}
+
+			// (2) 오늘 첫방문이면 todayCnt = 0, 오늘 첫방문인지를 체크히가위한 변수 todaySw(1은첫방문, 0은 두번이상방문)
+			int todaySw = 0;
+			if(!LocalDateTime.now().toString().substring(0,10).equals(vo.getLastDate().substring(0,10))) {
+				memberService.setMemberTodayCntClear(mid);
+				vo.setTodayCnt(0);
+				todaySw = 1;
+			}
 			
+			// 3-2. 기타처리 : 
+			// (2) 정회원 이상부터는 방문카운트로 10포인트 증정(단, 방문포인트는 정회원 이상부터 지급하기로하고, 1일 50포인트까지만 제한처리)
+			if(vo.getLevel() != 3) {
+				int point = vo.getTodayCnt() < 5 ? 10 : 0;
+				memberService.setMemberInforUpdate(mid, point);
+			}
+			else memberService.setMemberInforUpdate(mid, 0);
 			
-			// 3-2. 기타처리 : 방문카운트로 10포인트 증정(단, 1일 50포인트까지만 제한처리)
+			// 앞에서 모든 회원에 대하여 무조건 방문시 총방문횟수와 오늘 방문횟수를 증가시켰기에, 준회원인경우는 같은날 다시 방문했을경우는 '총방문횟수/오늘방문횟수'를 각각 1씩, 방문포인트는 -10을 뺀다.
+			// 따라서 방문카운트 4일 이상이되면 정회원으로 등업될수 있는 조건이 된다.
+			if(vo.getLevel() == 3 && todaySw == 0) memberService.setMemberInforUpdateMinus(mid);
 			
-			
-			
-			// 최종 방문일 업데이트처리
-			memberService.setLastDateUpdate(mid);
+			// 최종 방문일 업데이트처리(앞에서 처리했기에 삭제했다.)
+			//memberService.setLastDateUpdate(mid);
 			
 			return "redirect:/message/memberLoginOk?mid="+mid;
 		}
@@ -222,8 +245,9 @@ public class MemberController {
 	}
 	
 	// 회원 비밀번호 변경폼 보기
-	@GetMapping("/memberPwdCheck")
-	public String memberPwdCheckGet() {
+	@GetMapping("/memberPwdCheck/{flag}")
+	public String memberPwdCheckGet(Model model, @PathVariable String flag) {
+		model.addAttribute("flag", flag);
 		return "member/memberPwdCheck";
 	}
 	
@@ -243,6 +267,81 @@ public class MemberController {
 		if(res != 0) return "redirect:/message/passwordChangeOk";
 		else return "redirect:/message/passwordChangeNo";
 	}
+	
+	// 아이디 찾기 폼보기
+	@GetMapping("/memberIdSearch")
+	public String memberIdSearchGet() {
+		return "member/memberIdSearch";
+	}
+	
+	// 아이디 찾기
+	@ResponseBody
+	@PostMapping("/memberIdSearch")
+	public List<MemberVO> memberIdSearchPost(Model model, String email) {
+		return memberService.getmemberIdSearch(email);
+	}
+	
+	// 회원 정보 수정폼보기
+	@GetMapping("/memberUpdate")
+	public String memberUpdateGet(Model model, String mid) {
+		MemberVO vo = memberService.getMemberIdCheck(mid);
+		model.addAttribute("vo", vo);
+		return "member/memberUpdate";
+	}
+	
+	// 회원 정보 수정처리하기
+	@PostMapping("/memberUpdate")
+	public String memberUpdatePost(MultipartFile fName, MemberVO vo, HttpSession session) {
+		String nickName = (String) session.getAttribute("sNickName");
+		if(memberService.getMemberNickCheck(vo.getNickName()) != null && !nickName.equals(vo.getNickName())) {
+			return "redirect:/message/nickCheckNo?mid="+vo.getMid();
+		}
+		
+		// 회원 사진처리
+		if(fName.getOriginalFilename() != null && !fName.getOriginalFilename().equals("")) {
+			if(!vo.getPhoto().equals("noimage.jpg")) projectProvide.fileDelete(vo.getPhoto(), "member");
+			vo.setPhoto(projectProvide.fileUpload(fName, vo.getMid(), "member"));
+		}
+		
+		int res = memberService.setMemberUpdateOk(vo);
+		if(res != 0) {
+			session.setAttribute("sNickName", vo.getNickName());
+			return "redirect:/message/memberUpdateOk?mid="+vo.getMid();
+		}
+		else return "redirect:/message/memberUpdateNo?mid="+vo.getMid();
+	}
 
+	// 회원 탈퇴 신청...
+	@ResponseBody
+	@PostMapping("/userDelete")
+	public String userDeletePost(HttpSession session) {
+		String mid = (String) session.getAttribute("sMid");
+		int res = memberService.setUserDelete(mid);
+		
+		if(res != 0) {
+			session.invalidate();
+			return "1";
+		}
+		else return "0";
+	}
+
+	// 회원 리스트보기
+	@GetMapping("/memberList")
+	public String memberListGet(Model model,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize,
+			@RequestParam(name="level", defaultValue = "99", required = false) int level
+		) {
+		List<MemberVO> vos = memberService.getMemberList(0, 100, level);
+		
+		model.addAttribute("pag", pag);
+		model.addAttribute("pageSize", pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("level", level);
+		
+		return "member/memberList";
+	}
+	
 	
 }
