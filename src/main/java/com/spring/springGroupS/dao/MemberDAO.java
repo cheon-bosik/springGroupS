@@ -34,4 +34,8 @@ public interface MemberDAO {
 
 	List<MemberVO> getMemberList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("level") int level);
 
+	int getTotRecCnt();
+
+	List<MemberVO> getMemberLevelCount(@Param("level") int level);
+
 }

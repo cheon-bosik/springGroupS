@@ -3,5 +3,17 @@
 <mapper namespace="com.spring.springGroupS.dao.AdminDAO">
 
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	<update id="setMemberLevelChange">
+	  update member set level = #{level} where idx = #{idx};
+	</update>
+		
 
 </mapper>

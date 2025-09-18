@@ -23,7 +23,7 @@
   <p>방명록 새글 : 건</p>
   <p>게시판 새글 : 건</p>
   <p>신고글 새글 : 건</p>
-  <p>신규회원 : 건</p>
+  <p>신규회원 : <a href="${ctp}/admin/member/adMemberList?level=3" class="badge bg-secondary text-decoration-none">${memberLevelCount}</a>건</p>
   <p>탈퇴회원 : 건</p>
 </div>
 <p><br/></p>

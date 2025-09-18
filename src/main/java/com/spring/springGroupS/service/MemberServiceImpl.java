@@ -81,5 +81,15 @@ public class MemberServiceImpl implements MemberService {
 	public List<MemberVO> getMemberList(int startIndexNo, int pageSize, int level) {
 		return memberDAO.getMemberList(startIndexNo, pageSize, level);
 	}
+
+	@Override
+	public int getTotRecCnt() {
+		return memberDAO.getTotRecCnt();
+	}
+
+	@Override
+	public List<MemberVO> getMemberLevelCount(int level) {
+		return memberDAO.getMemberLevelCount(level);
+	}
 	
 }
