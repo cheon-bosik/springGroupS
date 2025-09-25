@@ -183,6 +183,20 @@
     		error : () => alert("전송 오류!")
     	});
     }
+    
+    // 화면 끝에서 위쪽으로 부드럽게 이동하기
+    $(window).scroll(function(){
+    	if($(this).scrollTop() > 100) {
+    		$("#topBtn").addClass("on");
+    	}
+    	else {
+    		$("#topBtn").removeClass("on");
+    	}
+    	
+    	$("#topBtn").click(function(){
+    		window.scrollTo({top:0, behavior: "smooth"});
+    	});
+    });
   </script>
   <style>
     th {
@@ -219,6 +233,19 @@
     /* 라이오버튼을 선택하면(checked), 해당 별과 그 앞의 별들을 노랑색으로 유지시킴 */
     #starForm input[type=radio]:checked ~ label {
       text-shadow: 0 0 0 rgba(250, 200, 0, 0.98);
+    }
+    
+    /* 화살표 부드럽게 위로 이동하는 CSS(2개) */
+    h6 {
+      position: fixed;
+      right: 1rem;
+      bottom: -50px;
+      transition: 0.7s ease;
+    }
+    .on {
+      opacity: 0.8;
+      cursor: pointer;
+      bottom: 0;
     }
   </style>
 </head>
@@ -289,7 +316,7 @@
         </div>
       </fieldset>
       <div class="m-0 p-0">
-        <textarea rows="3" name="review" id="review" class="form-control mb-1" placeholder="별점 후기를 남겨주시면 100포인트를 지급합니다."></textarea>
+        <textarea rows="3" name="review" id="review" class="form-control mb-1" placeholder="별점 후기를 남겨주시면 최대 100포인트를 지급합니다."></textarea>
       </div>
       <div>
         <input type="button" value="별점/리뷰등록" onclick="reviewCheck()" class="btn btn-primary btn-sm form-control"/>
@@ -405,5 +432,6 @@
 
 <p><br/></p>
 <jsp:include page="/WEB-INF/views/include/footer.jsp" />
+<h6 id="topBtn" class="text-end me-3"><img src="${ctp}/images/arrowTop.gif" title="위로이동"/></h6>
 </body>
 </html>
