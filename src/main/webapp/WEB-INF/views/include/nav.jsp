@@ -28,7 +28,8 @@
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card">
     <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="http://192.168.50.20:9090/springGroupS/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    <!-- <a href="http://192.168.50.20:9090/springGroupS/" class="w3-bar-item w3-button w3-padding-large">HOME</a> -->
+    <a href="http://localhost:9090/springGroupS/" class="w3-bar-item w3-button w3-padding-large">HOME</a>
     <a href="${ctp}/guest/guestList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Guest</a>
     <c:if test="${sLevel <= 3}">
 	    <a href="${ctp}/board/boardList" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Board</a>
@@ -60,6 +61,7 @@
 		        <a href="${ctp}/study2/dataApi/dataApiForm1" class="w3-bar-item w3-button">공공데이터(RestAPI)</a>
 		        <a href="${ctp}/study2/chart/chartForm" class="w3-bar-item w3-button">차트연습</a>
 		        <a href="${ctp}/study2/chart/chart2Form" class="w3-bar-item w3-button">차트연습2</a>
+		        <a href="${ctp}/study2/kakao/kakaomap" class="w3-bar-item w3-button">카카오 맵</a>
 		      </div>
 		    </div>
 	    </c:if>
