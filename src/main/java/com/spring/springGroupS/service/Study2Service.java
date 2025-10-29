@@ -2,8 +2,12 @@ package com.spring.springGroupS.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.spring.springGroupS.vo.CrimeVO;
 import com.spring.springGroupS.vo.KakaoAddressVO;
+import com.spring.springGroupS.vo.KakaoPlaceVO;
+import com.spring.springGroupS.vo.QrCodeVO;
 import com.spring.springGroupS.vo.TransactionVO;
 
 public interface Study2Service {
@@ -43,5 +47,17 @@ public interface Study2Service {
 	List<KakaoAddressVO> getKakaoAddressList();
 
 	int setKakaoAddressDelete(String address);
+
+	String setQrCodeCreate(String realPath, QrCodeVO vo);
+
+	QrCodeVO getQrCodeSearch(String qrCode);
+
+	String setThumbnailCreate(MultipartFile file, String mid, String realPath);
+
+	KakaoAddressVO getKakaoAddressSearchIdx(int idx);
+
+	List<KakaoPlaceVO> getKakaoAddressPlaceSearch(int idx);
+
+	int setKakaoPlaceInput(KakaoPlaceVO vo);
 
 }

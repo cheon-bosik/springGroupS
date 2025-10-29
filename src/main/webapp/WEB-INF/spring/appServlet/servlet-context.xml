@@ -4,7 +4,9 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
@@ -24,6 +26,11 @@
 	<resources mapping="/css/**" location="/resources/css/" />
 	<resources mapping="/fileUpload/**" location="/resources/data/fileUpload/" />
 	<resources mapping="/pds/**" location="/resources/data/pds/" />
+	<resources mapping="/qrCode/**" location="/resources/data/qrCode/" />
+	<resources mapping="/thumbnail/**" location="/resources/data/thumbnail/" />
+	<resources mapping="/product/**" location="/resources/data/dbShop/product/" />
+	<resources mapping="/inquiry/**" location="/resources/data/inquiry/" />
+	<resources mapping="/photoGallery/**" location="/resources/data/photoGallery/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -44,5 +51,8 @@
 	
 	<!-- Transaction(트랜잭션) 어노테이션 처리를 위한 빈 추가 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- 어노테이션을 통한 스프링 스케줄러 사용 -->
+	<task:annotation-driven />
 	
 </beans:beans>

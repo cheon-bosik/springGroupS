@@ -18,7 +18,8 @@ public class MessageController {
 	public String getMessage(Model model, HttpSession session, PageVO pageVO,
 			@PathVariable String msgFlag,
 			@RequestParam(name="mid", defaultValue = "", required = false) String mid,
-			@RequestParam(name="idx", defaultValue = "0", required = false) int idx
+			@RequestParam(name="idx", defaultValue = "0", required = false) int idx,
+			@RequestParam(name="tempFlag", defaultValue = "", required = false) String tempFlag
 			//@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			//@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize
 		) {
@@ -95,12 +96,20 @@ public class MessageController {
 			model.addAttribute("message", mid+"님 로그인 되셨습니다.");
 			model.addAttribute("url", "/member/memberMain");
 		}
+		else if(msgFlag.equals("memberLoginNewOk")) {
+			model.addAttribute("message", mid+"님 로그인 되셨습니다.\\n신규 비밀번호가 발급되었습니다. 검점후 회원정보를 변경해주세요.");
+			model.addAttribute("url", "/member/memberMain");
+		}
 		else if(msgFlag.equals("memberLoginNo")) {
 			model.addAttribute("message", "로그인 실패~~");
 			model.addAttribute("url", "/member/memberLogin");
 		}
 		else if(msgFlag.equals("memberLogout")) {
 			model.addAttribute("message", mid + "님 로그아웃 되셨습니다.");
+			model.addAttribute("url", "/member/memberLogin");
+		}
+		else if(msgFlag.equals("kakaoLogout")) {
+			model.addAttribute("message", mid + "님 로그아웃 되셨습니다.(kakao)");
 			model.addAttribute("url", "/member/memberLogin");
 		}
 		else if(msgFlag.equals("mailSendOk")) {
@@ -197,13 +206,65 @@ public class MessageController {
 			model.addAttribute("message", "자료실에 자료가 등록되었습니다.");
 			model.addAttribute("url", "/pds/pdsList");
 		}
-		else if(msgFlag.equals("pdsInputNo")) {
-			model.addAttribute("message", "자료실에 자료 등록 실패~~");
-			model.addAttribute("url", "/pds/pdsInput");
+		else if(msgFlag.equals("cartEmpty")) {
+			model.addAttribute("message", "장바구니가 비어있습니다.");
+			model.addAttribute("url", "/dbShop/dbProductList");
 		}
-		else if(msgFlag.equals("transactionUserInputOk")) {
-			model.addAttribute("message", "회원 가입 완료...");
-			model.addAttribute("url", "/study2/transaction/transactionForm");
+		else if(msgFlag.equals("paymentResultOk")) {
+			model.addAttribute("message", "결재가 성공적으로 완료되었습니다.");
+			model.addAttribute("url", "/dbShop/paymentResultOk");
+		}
+		else if(msgFlag.equals("inquiryInputOk")) {
+			model.addAttribute("message", "1:1 문의가 등록되었습니다.");
+			model.addAttribute("url", "/inquiry/inquiryList");
+		}
+		else if(msgFlag.equals("inquiryUpdateOk")) {
+			model.addAttribute("message", "1:1 문의 수정완료");
+			model.addAttribute("url", "/inquiry/inquiryList");
+		}
+		else if(msgFlag.equals("inquiryUpdateNo")) {
+			model.addAttribute("message", "1:1 문의 수정실패~~");
+			model.addAttribute("url", "/inquiry/inquiryUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("inquiryDeleteOk")) {
+			model.addAttribute("message", "1:1 문의 삭제완료");
+			model.addAttribute("url", "/inquiry/inquiryList");
+		}
+		else if(msgFlag.equals("inquiryDeleteNo")) {
+			model.addAttribute("message", "1:1 문의 삭제실패~~");
+			model.addAttribute("url", "/admin/inquiry/inquiryView?idx="+idx);
+		}
+		else if(msgFlag.equals("adInpuiryReplyUpdateOk")) {
+			model.addAttribute("message", "1:1 문의 답변글이 수정되었습니다.");
+			model.addAttribute("url", "/admin/inquiry/adInquiryReply?idx="+idx);
+		}
+		else if(msgFlag.equals("adInpuiryReplyUpdateNo")) {
+			model.addAttribute("message", "1:1 문의 답변글이 수정 실패~~");
+			model.addAttribute("url", "/admin/inquiry/adInquiryReply?idx="+idx);
+		}
+		else if(msgFlag.equals("adInquiryDeleteOk")) {
+			model.addAttribute("message", "1:1 문의 원본글(+답변글)이 삭제 되었습니다.");
+			model.addAttribute("url", "/admin/inquiry/adInquiryList");
+		}
+		else if(msgFlag.equals("photoGalleryInputOk")) {
+			model.addAttribute("message", "포토갤러리에 등록되었습니다.");
+			model.addAttribute("url", "/photoGallery/photoGalleryList");
+		}
+		else if(msgFlag.equals("photoGalleryInputNo")) {
+			model.addAttribute("message", "포토갤러리에 등록 실패~~");
+			model.addAttribute("url", "/photoGallery/photoGalleryInput");
+		}
+		else if(msgFlag.equals("photoGalleryUpdateOk")) {
+			model.addAttribute("message", "포토갤러리 수정 완료");
+			model.addAttribute("url", "/photoGallery/photoGalleryList");
+		}
+		else if(msgFlag.equals("photoGalleryUpdateNo")) {
+			model.addAttribute("message", "포토갤러리 수정 실패~~");
+			model.addAttribute("url", "/photoGallery/photoGalleryUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("photoGalleryDeleteOk")) {
+			model.addAttribute("message", "포토갤러리에서 자료를 삭제하였습니다.");
+			model.addAttribute("url", "/photoGallery/photoGalleryList");
 		}
 
 		
