@@ -5,6 +5,11 @@
 
 <b><a href="https://github.com/cheon-bosik/springGroupS/blob/master/src/main/java/com/spring/springGroupS/controller/BoardController.java" target="_blank">게시판 컨트롤러 보기>게시></b>
 
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=cheon-bosik)](https://github.com/anuraghazra/github-readme-stats)
+
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=cheon-bosik)](https://github.com/anuraghazra/github-readme-stats)
+
+
 <!-- 목록기호 넣기 -->
 * 사과
 * 🍎🍏
