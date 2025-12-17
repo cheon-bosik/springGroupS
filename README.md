@@ -1,6 +1,8 @@
 <!-- 이미지 넣기 -->
 ![웹개발](http://49.142.157.251:9090/springGroupS12/data/board/251217110559_spring1.jpg)
 
+<b><a href="https://github.com/cheon-bosik/springGroupS/blob/master/src/main/java/com/spring/springGroupS/controller/BoardController.java" target="_blank">게시판 컨트롤러 보기>게시></b>
+
 <!-- 목록기호 넣기 -->
 * 사과
 * 🍎🍏
